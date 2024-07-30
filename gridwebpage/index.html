@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Modem Setup</title>
+	<link rel="stylesheet" type="text/css" href="style/style.css">
+
+</head>
+
+<body>
+	<div class="header">
+		<img src="icons/logo.png" alt="Logo" class="logo" >
+		
+	  </div>
+	<div class="sidebar-container">
+		<button id="sidebar-icon" class="sidebar-icon">></button>
+		<nav class="sidebar" id="sidebar">
+			<a href="#network" id="network-link" class="link">Device Status</a>
+			<a href="#wireless" id="wireless-link" class="link">Wireless Settings</a>
+			<a href="#internet" id="internet-link" class="link" >Internet Settings</a>
+			<!-- <a href="#webserial" id="webserial-link" class="link">Web Serial</a> -->
+			<a href="#update" id="update-link" class="link">Update</a>
+			<a href="#reboot" id="reboot-link" class="link">Reboot</a>
+			<a href="#factory-reset" id="factory-reset-link" class="link">Factory Reset</a>
+			<a href="#logout" id="logout-l" class="link">Logout</a>
+			<div class="toggle-switch">
+				<input type="checkbox" id="dark-mode-toggle"  />
+				<label for="dark-mode-toggle" class="dark-mode-toggle"></label>
+			</div>
+		</nav>
+		<div class="btmswitch">
+			
+			<div class="serial" id="serial">
+				<button onclick="window.location.href='serial.html';" class="serialbtn" id="serialbtn"><img
+						src="serial.png" alt="Button Image" class="serialimg" width="40" height="40" /></button>
+			</div>
+		</div>
+	</div>
+
+	<div class="content">
+
+		<div class="page internet">
+			<h2>Internet Settings</h2>
+			<form class="internet-settings-form">
+				<p>
+					<label for="connection-type">Connection Type:</label>
+					<select id="connection-type" class="connection-type">
+						<option value="Dhcp"> DHCP</option>
+						<option value="Static"> Static</option>
+					</select>
+				</p>
+				<p>
+					<label for="ip-address">IP Address:</label>
+					<input type="text" class="ip-address" placeholder=192.168.1.59 disabled>
+				</p>
+				<p>
+					<label for="subnet-mask">Subnet Mask:</label>
+					<input type="text" class="subnet-mask" placeholder=255.255.255.0 disabled>
+				</p>
+				<p>
+					<label for="gateway">Gateway:</label>
+					<input type="text" class="gateway" placeholder=192.168.1.1 disabled>
+				</p>
+				<p>
+					<label for="primary-dns">Primary DNS:</label>
+					<input type="text" class="primary-dns" placeholder=8.8.8.8 disabled>
+				</p>
+				<p>
+					<label for="secondary-dns">Secondary DNS:</label>
+					<input type="text" class="secondary-dns" placeholder=8.8.4.4 disabled>
+				</p>
+				<p>
+					<input type="button" class="save-button" value="Save">
+				</p>
+			</form>
+
+		</div>
+		<div class="page wireless">
+			<h2>WIFI</h2>
+			<div class="menu">
+				<select class="wireless-mode">
+					<option value="scan">Scan</option>
+					<option value="manual">Manual</option>
+				</select>
+				<button class="scan-button" id="refresh" value="refresh" onclick="scanWiFi()">Refresh</button>
+			</div>
+			<div id="wifi-box-container">
+			</div>
+
+
+
+
+			<div class="manual-input-container" style="display: none;">
+				<label class="l1" for="ssid">SSID:</label>
+				&nbsp;<input type="text" id="ssid" class="ssid" required />
+				<br><br>
+				<label class="l2" for="password">Password:</label>
+				<div class="manual_pass">
+					<input type="password" id="password" class="password" required />
+					<button class="rev-password" id="rev" onclick="togglePasswordVisibility('password')">
+						<img src="eyeopen.png" alt="Eye icon" width="20" height="20"> </button>
+				</div><br><br>
+				<button
+					onclick="connectWifi(document.getElementById('ssid').value,document.getElementById('password').value)"
+					class="save-manual">Save</button>
+			</div>
+		</div>
+		<div class="page network">
+			<h2>Network Status</h2>
+			<div class="field">
+				<label for="wifi-name">WiFi Name:</label>
+				<span id="wifiname" class="wifiname">WiFi</span>
+			</div>
+			<div class="field">
+				<label for="wifi-mac">MAC Address of WiFi:</label>
+				<span id="wifi-mac" class="wifi-mac">WiFi</span>
+			</div>
+			<div class="field">
+				<label for="device-mac">MAC Address of Device:</label>
+				<span id="device-mac" class="device-mac">WiFi</span>
+			</div>
+			<div class="field">
+				<label for="ip-status">IP Address of Device:</label>
+				<span id="ip-status" class="ip-status">WiFi</span>
+			</div>
+			<div class="field">
+				<label for="wifi-connection-status">WiFi Connection Status:</label>
+				<span id="wifi-connection-status" class="wifi-connection-status">WiFi</span>
+			</div>
+			<div class="field">
+				<label for="wifi-internet-status">Network Status:</label>
+				<span id="wifi-internet-status" class="wifi-internet-status">WiFi</span>
+			</div>
+			<div class="field">
+				<label for="wifi-internet-setup">Network Type:</label>
+				<span id="wifi-internet-type" class="wifi-internet-type">WiFi</span>
+			</div>
+			<br>
+			<h2>Software Details</h2>
+
+			<div class="field">
+				<label for="device">Device:</label>
+				<span id="device" class="device">WiFi</span>
+			</div>
+			<div class="field">
+				<label for="firmware-version">Firmware Version:</label>
+				<span id="firmware-version" class="firmware-version">WiFi</span>
+			</div>
+			<div class="field">
+				<label for="file-system-version">File System Version:</label>
+				<span id="file-system-version" class="file-system-version">WiFi</span>
+			</div>
+		</div>
+		<div class="page reboot">
+			<h2>Reboot</h2>
+			<p>The device will reboot. This will restart the device and may take a few minutes.</p>
+			<button onclick="rebootDevice()" class="reboot-btn">Reboot</button>
+		</div>
+		<div class="page factory-reset">
+			<h2>Factory Reset</h2>
+			<p>Warning: This will restore the device to its factory settings. All settings and data will be lost.</p>
+			<button onclick="resetDevice()" class="factory-reset-btn">Factory Reset</button>
+		</div>
+
+
+		<div class="page update">
+			<div class="update-form">
+				<form method='POST' action='/upload' enctype='multipart/form-data'>
+					<h1>Update Device</h1>
+					<div class="component-select">
+						<input type="radio" id="firmware-radio" name="component" value="firmware" checked>
+						<label for="firmware-radio">Firmware</label>
+						<input type="radio" id="filesystem-radio" name="component" value="filesystem">
+						<label for="filesystem-radio">File System</label>
+					</div>
+					<div class="firmware-form" id="firmware-form" style="display: block;">
+						<input type="file" id="fileInput1" name="file" accept=".bin,.bin.gz">
+					</div>
+					<div class="firmware-form" id="filesystem-form" style="display: none;">
+						<input type="file" id="fileInput2" name="file" accept=".bin,.bin.gz">
+					</div>
+					<div id="message-container" style="display: none;">
+						<p id="message"></p>
+					</div>
+					<input type='hidden' name='componentValue' value=''>
+					<input type='submit' value='Update'>
+				</form>
+			</div>
+		</div>
+		<div class="page logout">
+			<h2>Logout</h2>
+			<p>You are Logging out from Device.</p>
+			<button id="logout-link" class="factory-reset-btn">Logout</button>
+		</div>
+	</div>
+
+	<script src="script/script.js"></script>
+</body>
+
+</html>
