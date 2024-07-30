@@ -1,0 +1,213 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-Serial</title>
+</head>
+<style>
+    body {
+
+        background-color: #e4e4e4;
+        font-family: Arial, sans-serif;
+        margin: 0%;
+        overflow: hidden;
+    }
+
+    .header {
+        height: 76px;
+        background-color: #5d1451;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: none;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+        height: 50px;
+        margin-right: 10px;
+        filter: invert(1) brightness(2.5);
+        /* left: 0;
+       right: 0; */
+    }
+
+    .menulogo {
+        height: 50px;
+        margin-left: 10px;
+        filter: invert(1) brightness(2.5);
+        position: absolute;
+        left: 0;
+    }
+
+    .menulogo:hover {
+        filter: brightness(2.5);
+    }
+
+    .webserial {
+        text-align: center;
+        padding: 30px;
+    }
+
+    .webin {
+        width: 100%;
+        display: flex;
+    }
+
+    .webinput {
+        width: 92%;
+        height: 40px;
+        /* margin-right: 30px; */
+        border-radius: 20px 0 0 20px;
+        border: 1px solid #444;
+    }
+
+    .webody {
+        margin-top: 50px;
+        border: 1px solid #444;
+        background-color: #fff;
+        height: 50vh;
+
+        border-radius: 25px;
+        overflow: auto;
+        text-align: left;
+        padding: 20px;
+    }
+
+    .websnd {
+        background-color: #5d1451;
+        border: 1px solid #360a2f;
+        color: #fff;
+        /* padding: 10px 20px; */
+        /* border-radius: 20px; */
+    }
+
+    .websnd:hover,
+    .webclr:hover,
+    #autoscroll-btn:hover {
+        background-color: #9e1a88;
+    }
+
+    .webclr {
+        /* margin-top: 40px; */
+        /* left: 1%; */
+        background-color: #5d1451;
+        border: 1px solid #360a2f;
+        color: #fff;
+        border-radius: 0 20px 20px 0;
+        /* padding: 13px 20px; */
+        /* border-radius: 20px; */
+    }
+
+    #autoscroll-btn {
+        /* display: inline-block; */
+        /* width: 20px; */
+        /* height: 20px; */
+        border: 1px solid #360a2f;
+        /* padding: 10px 10px; */
+        background-color: #9e1a88;
+        /* margin: 10px; */
+        /* text-align: center; */
+        /* vertical-align: middle; */
+    }
+
+    #autoscroll-icon {
+        width: 24px;
+        height: 24px;
+        border: none;
+        padding: 0;
+        filter: invert(1) brightness(2.5);
+        /* display: block; */
+        margin: 0 auto;
+    }
+
+    .highlight {
+        background-color: #9e1a88;
+        border: 1px solid #360a2f;
+        /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); */
+    }
+
+    @media only screen and (max-width: 768px) {
+        body {
+
+            background-color: #e4e4e4;
+            font-family: Arial, sans-serif;
+            margin: 0%;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            justify-content: right;
+        }
+
+    }
+</style>
+
+<body>
+    <div class="header">
+        <img src="logo.png" alt="Logo" class="menulogo" onclick="window.history.back()">
+        <img src="serial.png" alt="Logo" class="logo">
+        <h2>Web Serial</h2>
+    </div>
+    <div class="webserial">
+        <div class="webin">
+            <input type="text" id="webinput" class="webinput" required>
+            <button class="websnd" id="websnd" onclick="sendMessage()">Send</button>
+            <button id="autoscroll-btn">
+                <img src="arrow.png" alt="Autoscroll On" id="autoscroll-icon">
+            </button>
+            <button class="webclr" id="webclr" onclick="clearData()">Clear</button>
+        </div>
+        <div class="webody" id="webody"></div>
+
+    </div>
+</body>
+<script>
+    const autoscrollBtn = document.getElementById('autoscroll-btn');
+    const autoscrollIcon = document.getElementById('autoscroll-icon');
+    const webodyDiv = document.getElementById('webody');
+    let autoscrollEnabled = true;
+
+    autoscrollBtn.addEventListener('click', () => {
+        console.log('Button clicked!');
+        console.log('autoscrollBtn:', autoscrollBtn);
+        autoscrollEnabled = !autoscrollEnabled;
+        if (autoscrollEnabled) {
+            document.getElementById('autoscroll-btn').style.backgroundColor = '#9e1a88'; 
+        } else {
+            document.getElementById('autoscroll-btn').style.backgroundColor = '#5d1451'; 
+        }
+    });
+
+    var socket = new WebSocket('ws://' + window.location.hostname + ':' + window.location.port + '/ws');
+
+    socket.onmessage = function (event) {
+        if (!(event.data.startsWith('{') && event.data.endsWith('}'))) {
+            const webodyDiv = document.getElementById('webody');
+            webodyDiv.innerHTML += event.data;
+
+            if (autoscrollEnabled) {
+                webodyDiv.scrollTop = webodyDiv.scrollHeight;
+            }
+        }
+    };
+
+    const inputField = document.getElementById('webinput');
+
+    function sendMessage() {
+        if (inputField.value) {
+            socket.send(inputField.value);
+            inputField.value = '';
+        }
+    }
+    function clearData() {
+        var div = document.getElementById("webody");
+        div.innerHTML = "";
+    }
+</script>
+
+</html>

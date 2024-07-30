@@ -1,0 +1,12 @@
+{
+    "ssid": "",
+    "password": "",
+    "ipAddress": "",
+    "subnetMask": "",
+    "gateway": "",
+    "primaryDns": "",
+    "secondaryDns": "",
+    "connectionType": "",
+    "firmware": "",
+    "filesystem": ""
+}

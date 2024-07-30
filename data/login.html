@@ -1,0 +1,265 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    body {
+
+      background-color: #e4e4e4;
+      font-family: Arial, sans-serif;
+      margin: 0%;
+      overflow: hidden;
+    }
+
+    .header {
+
+      background-color: #5d1451;
+      height: 76px;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      display: flex;
+      /* justify-content: space-between; */
+      align-items: center;
+      /* border: 1px solid #ddd; */
+      border-bottom: none;
+      /* border-radius: 5px 5px 0 0; */
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      height: 50px;
+      filter: invert(1) brightness(2.5);
+    }
+
+    .logo:hover {
+      filter: brightness(2.5);
+    }
+    .user,.key{
+      filter: invert(1);
+      background-color: #a2e9ae;
+    }
+
+    .serialimg {
+      filter: invert(1) brightness(2.5);
+    }
+
+    .container {
+      align-self: center;
+      width: 300px;
+      background-color: #fff;
+      padding: 20px;
+      margin: 50px auto;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+      margin-top: 20vh;
+      /* margin-left: 10px; */
+    }
+
+    h1 {
+      text-align: center;
+      /* margin-bottom: 30px; */
+    }
+
+    /* h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      color: #fff;
+      font-weight: bold;
+      padding-right: 20px;
+      top: 3;
+      right: 0;
+      position: absolute;
+    } */
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 20px;
+      margin-left: 10%;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+    }
+
+    input[type="submit"] {
+      display: inline-block;
+      background-color: #5d1451;
+      margin-left: 35%;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #9e1a88;
+    }
+
+    .reveal-container {
+      position: relative;
+      width: 300px;
+    }
+
+
+    .reveal-button {
+      position: absolute;
+      top: 0;
+      left: 1;
+      padding: 8px;
+      border: none;
+      background-color: #5d1451;
+      border-radius: 3px 0 0 3px;
+      cursor: pointer;
+    }
+
+
+    .input-wrapper {
+      position: relative;
+      width: 300px;
+      
+    }
+
+    .input-wrapper img {
+      position: absolute;
+      /* background-color: #5d1451; */
+      top: 0;
+      left: 0;
+      padding: 8px;
+      border-radius: 3px 0 0 3px;
+    }
+
+
+
+    .content {
+      margin-left: 10px;
+      margin-top: 15px;
+    }
+
+
+    .serialbtn {
+      border: 1px solid #ddd;
+      background-color: #5d1451;
+      border-radius: 25px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+      position: absolute;
+      bottom: 20;
+      right: 20;
+    }
+
+    .field {
+      
+      color: #fff;
+      font-weight: bold;
+      padding: 20px;
+      top: 3;
+      right: 0;
+      position: absolute;
+    }
+
+    .field label {
+      flex: 1;
+      margin-top: 2px;
+      font-family: 'Merriweather', serif;
+      white-space: nowrap;
+      font-size: 10px;
+    }
+
+    .field span {
+      flex: 1;
+      margin-bottom: 5px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      
+
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <img src="logo.png" alt="Logo" class="logo" onclick="window.location.href = '/';">
+    <!-- <h3>ESP WEB-CONFIG</h3> -->
+    <div class="field">
+      
+      <span id="device" class="device">Unknown</span>
+      <label for="model-name">ESP WEB-CONFIG</label>
+    </div>
+  </div>
+  <div class="container">
+    <form action="/login " method="post" onsubmit="return removeSpaces(this)">
+      <div class="content">
+        <div class="input-wrapper">
+          <img src="user.png" alt="user" class="user" width="21" height="21">
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="reveal-container">
+          <input type="password" id="password" class="input-field" name="password" required>
+          <label class="reveal-button" onclick="togglePasswordVisibility()">
+            <img src="key.png" alt="Show/Hide Password"class="key" width="21" height="21">
+          </label>
+        </div>
+        <input type="submit" value="Submit">
+      </div>
+    </form>
+    <div class="serial" id="serial">
+      <button onclick="window.location.href='serial.html';" class="serialbtn" id="serialbtn"><img src="serial.png"
+          alt="Button Image" class="serialimg" width="40" height="40" /></button>
+    </div>
+  </div>
+  <script>
+
+    var socket = new WebSocket('ws://' + window.location.hostname + ':' + window.location.port + '/ws');
+
+    socket.onmessage = function (event) {
+      if (event.data.startsWith('{') && event.data.endsWith('}')) {
+        const data = JSON.parse(event.data);
+        if (document.getElementById('device')) {
+          document.getElementById('device').innerHTML = data.device;
+        }
+      }
+    };
+
+    const inputField = document.getElementById('webinput');
+
+    function sendMessage() {
+      if (inputField.value) {
+        socket.send(inputField.value);
+        inputField.value = '';
+      }
+    }
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('password');
+      const revealButton = document.querySelector('.reveal-button');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        // revealButton.innerHTML = '<img src="key.png" alt="Hide Password" width="20" height="20">';
+      } else {
+        passwordInput.type = 'password';
+        // revealButton.innerHTML = '<img src="key.png" alt="Show Password" width="20" height="20">';
+      }
+    }
+    function removeSpaces(form) {
+      form.username.value = form.username.value.trim();
+      form.password.value = form.password.value.trim();
+      return true; // allow the form to submit
+    }
+  </script>
+</body>
+
+</html>
